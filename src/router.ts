@@ -1,25 +1,42 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import VueRouter from 'vue-router';
+import Login from './views/frame/login/Login.vue';
 import Home from './views/Home.vue';
+import NoDefund from './views/frame/404/404.vue';
 
-Vue.use(Router);
+Vue.use(VueRouter);
 
-export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
+export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      name: 'login',
+      component: Login,
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      path: '/home',
+      name: 'home',
+      component: Home,
+      children: [
+        {
+          path: '/menulist',
+          name: 'menulist',
+          component: () => import('./views/frame/userManager/MenuList.vue'),
+        },
+        {
+          path: '/userlist',
+          name: 'userlist',
+          component: () => import('./views/frame/userManager/UserList.vue'),
+        },
+      ],
+    },
+    // 通配页，找不到就进入404页面，放在最后面
+    {
+      path: '/404',
+      name: '404',
+      component: NoDefund,
     },
   ],
+  mode: 'history',
 });
+
